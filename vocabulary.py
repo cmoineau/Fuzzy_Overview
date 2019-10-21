@@ -73,7 +73,7 @@ class TrapeziumModality(Modality):
                     ret = 1.0 - ((self.minCore - v) / (self.minCore - self.minSupport))
                 elif v <= self.maxSupport:
                     # right to the core
-                    ret =  (self.maxSupport - v) / (self.maxSupport - self.maxCore)
+                    ret = (self.maxSupport - v) / (self.maxSupport - self.maxCore)
                 # out of the support
                 else:
                     ret= 0.0

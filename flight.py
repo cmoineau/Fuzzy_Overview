@@ -102,6 +102,7 @@ class Flight(object):
 			for partelt in part.getModalities():
 				val=self.getValue(part.getAttName())
 				mu = partelt.getMu(val)
+				# print("%s.%s = %f"%(part.attname,partelt.getName(),mu))
 				rw.append(mu)
 		return rw
 
