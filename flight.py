@@ -18,6 +18,10 @@ class Flight(object):
 		d = l.split(",")
 		self.fields = dict()
 		try:
+			self.fields['TailNum'] =(d[voc.mapping('TailNum')])
+		except:
+			self.fields['TailNum'] = None
+		try:
 			self.fields['DayOfWeek'] =int(d[voc.mapping('DayOfWeek')])
 		except:
 			self.fields['DayOfWeek'] = None
@@ -97,13 +101,13 @@ class Flight(object):
 
 	def rewrite(self):
 		""" Rewrite the flight according to the vocabulary voc (voc is a Vocabulary)"""
-		rw=[]
+		rw={}
 		for part in self.vocabulary.getPartitions():
 			for partelt in part.getModalities():
 				val=self.getValue(part.getAttName())
 				mu = partelt.getMu(val)
 				# print("%s.%s = %f"%(part.attname,partelt.getName(),mu))
-				rw.append(mu)
+				rw[part.attname+"."+partelt.getName()] = mu
 		return rw
 
 if __name__ == "__main__":

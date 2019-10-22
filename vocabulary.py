@@ -2,6 +2,7 @@
 
 import sys
 import os
+from collections import OrderedDict
 
 
 class Modality(object):
