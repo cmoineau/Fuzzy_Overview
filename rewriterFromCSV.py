@@ -48,30 +48,21 @@ class RewriterFromCSV(object):
         Rv1={}
         for i in v1:
             Rv1[i] = 0
-        # Calcul de cover(v1, Rv2) & cover(v2, R)
-        try:
-            with open(self.dataFile, 'r') as source:
-                nb_row = 0
-                for line in source:
-                    nb_row += 1
-                    line = line.strip()
-                    if line != "" and line[0] != "#":
-                        f = Flight(line, self.vocabulary)
-                        f_rewrite = f.rewrite()
-                        for key in f_rewrite:
-                            if key in v1:
-                                Rv1[key] += f_rewrite[key]
-        except:
-            raise Exception("Error while loading the dataFile %s" % (self.dataFile))
+        # Calcul de cover(v1, Rv2) & cover(v1, R)
+        Rv1 = rw.recriture(v1)
+
         cover1 = 0
         cover2 = 0
         for key, elts in Rv1.items():
-            cover2 += self.R[key] / len(self.R)
+            cover2 += self.R[key]
             if key in v2:
-                cover1 += elts / len(Rv1)
-
+                cover1 += elts
+        print((Rv1))
+        cover1 = cover1 / len(Rv1)
+        cover2 = cover2 / len(self.R)
         # Calcul de dep(v1,v2)
         dep = cover1 / cover2
+        print(dep, cover1, cover2)
         if dep <= 1:
             return 0
         else:
@@ -99,6 +90,22 @@ class RewriterFromCSV(object):
                         ans.append(f)
         return ans
 
+    def recriture(self, list_id, seuil=0.0):
+        ans = {}
+        with open(self.dataFile, 'r') as source:
+            for line in source:
+                line = line.strip()
+                if line != "" and line[0] != "#":
+                    f = Flight(line, self.vocabulary)
+                    f_rewrite = f.rewrite()
+                    min = 0
+                    for key in f_rewrite:
+                        if key in list_id:
+                            min = self.t_norme(min, f_rewrite[key])
+                    if min > seuil:
+                        ans.append(f)
+        return ans
+
 
 if __name__ == "__main__":
     path_vocabulary = "./Data/FlightsVoc2.txt"
@@ -108,10 +115,11 @@ if __name__ == "__main__":
         if os.path.isfile(path_data):
             rw = RewriterFromCSV(voc, path_data)
             # rw.readAndRewrite()
-            # selection = rw.selection(['DayOfWeek.end'])
+            selection = rw.selection(['DayOfWeek.end'])
+            print(selection)
             # for flight in selection:
             #     print(flight.fields['TailNum'])
-            print(rw.correlation(['DayOfWeek.end'], ['DayOfWeek.end']))
+            # print(rw.correlation(['DepDelay.long'], ['ArrDelay.long']))
         else:
             print("Data file %s not found" % path_data)
     else:
