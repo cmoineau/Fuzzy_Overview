@@ -34,7 +34,6 @@ class RewriterFromCSV(object):
                             self.R[key] += f_rewrite[key]
             for key, elts in self.R.items():
                     self.R[key] = elts / nb_row
-            print(self.R)
         except:
             raise Exception("Error while loading the dataFile %s" % (self.dataFile))
 
@@ -57,12 +56,10 @@ class RewriterFromCSV(object):
             cover2 += self.R[key]
             if key in v2:
                 cover1 += elts
-        print((Rv1))
         cover1 = cover1 / len(Rv1)
         cover2 = cover2 / len(self.R)
         # Calcul de dep(v1,v2)
         dep = cover1 / cover2
-        print(dep, cover1, cover2)
         if dep <= 1:
             return 0
         else:
@@ -90,20 +87,16 @@ class RewriterFromCSV(object):
                         ans.append(f)
         return ans
 
-    def recriture(self, list_id, seuil=0.0):
+    def reecriture(self, list_id, seuil=0.0):
         ans = {}
-        with open(self.dataFile, 'r') as source:
-            for line in source:
-                line = line.strip()
-                if line != "" and line[0] != "#":
-                    f = Flight(line, self.vocabulary)
-                    f_rewrite = f.rewrite()
-                    min = 0
-                    for key in f_rewrite:
-                        if key in list_id:
-                            min = self.t_norme(min, f_rewrite[key])
-                    if min > seuil:
-                        ans.append(f)
+        for part in self.vocabulary.getPartitions():
+            for partelt in part.getModalities():
+                ans[part.attname + "." + partelt.getName()] = 0
+        s = rw.selection(list_id,seuil=seuil)
+        for flight in selection :
+            f = flight.rewrite()
+            for key,x in f.items() :
+                ans[key]= ans[key] + x/len(selection)
         return ans
 
 
@@ -116,9 +109,10 @@ if __name__ == "__main__":
             rw = RewriterFromCSV(voc, path_data)
             # rw.readAndRewrite()
             selection = rw.selection(['DayOfWeek.end'])
-            print(selection)
-            # for flight in selection:
-            #     print(flight.fields['TailNum'])
+            print(rw.reecriture(['DayOfWeek.end']))
+
+            #for flight in selection:
+            #    print(flight.fields['TailNum'])
             # print(rw.correlation(['DepDelay.long'], ['ArrDelay.long']))
         else:
             print("Data file %s not found" % path_data)
