@@ -15,12 +15,14 @@ class RewriterFromCSV(object):
         self.dataFile = df
         self.R = {}
         self.nb_flight = 0
-        self.readAndRewrite()
 
     def readAndRewrite(self):
+        if self.R != {}: # Here we test if we have already computed R.
+            return self.R
+        R = {}
         for part in self.vocabulary.getPartitions():
             for partelt in part.getModalities():
-                self.R[part.attname + "." + partelt.getName()] = 0
+                R[part.attname + "." + partelt.getName()] = 0
         try:
             with open(self.dataFile, 'r') as source:
                 self.nb_flight = 0
@@ -31,11 +33,13 @@ class RewriterFromCSV(object):
                         f = Flight(line, self.vocabulary)
                         f_rewrite = f.rewrite()
                         for key in f_rewrite:
-                            self.R[key] += f_rewrite[key]
-            for key, elts in self.R.items():
-                    self.R[key] = elts / self.nb_flight
+                            R[key] += f_rewrite[key]
+            for key, elts in R.items():
+                    R[key] = elts / self.nb_flight
         except:
             raise Exception("Error while loading the dataFile %s" % (self.dataFile))
+        return R
+
 
     def correlation(self, v1, v2):
         """
@@ -45,12 +49,12 @@ class RewriterFromCSV(object):
         :return:
         """
         Rv1 = rw.reecriture(v1)
-        print(Rv1)
+        R = self.readAndRewrite()
         size_r1 = len(rw.selection(v1))
         cover1 = 0
         cover2 = 0
         for key in v2:
-            cover2 += self.R[key]
+            cover2 += R[key]
             cover1 += Rv1[key]
         # Calcul de dep(v1,v2)
         dep = cover1 / cover2
@@ -87,7 +91,7 @@ class RewriterFromCSV(object):
         for part in self.vocabulary.getPartitions():
             for partelt in part.getModalities():
                 ans[part.attname + "." + partelt.getName()] = 0
-        s = rw.selection(list_id,seuil=seuil)
+        s = self.selection(list_id,seuil=seuil)
         for flight in s:
             f = flight.rewrite()
             for key, x in f.items():
