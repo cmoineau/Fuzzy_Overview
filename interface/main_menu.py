@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter.messagebox import *
 from interface.selection import create_select_menu
-
+from interface.correlation import create_correlation_menu
 
 def not_ready_yet():
     showerror("Erreur : Page pas prêtes", "La page est actuellement en construction !")
@@ -20,7 +20,7 @@ def create_main_menu():
     selection_button = Button(label_main, text="Selection", command=create_select_menu)
     selection_button.pack()
 
-    correlation_button = Button(label_main, text="Correlation", command=not_ready_yet)
+    correlation_button = Button(label_main, text="Correlation", command=create_correlation_menu)
     correlation_button.pack()
 
     atypique_button = Button(label_main, text="Terme Atypique", command=not_ready_yet)

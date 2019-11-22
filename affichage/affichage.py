@@ -11,6 +11,10 @@ path_vocabulary = "../Data/FlightsVoc2.txt"
 path_data = "../Data/2008short.csv"
 print('Loading vocabulary ...')
 voc = Vocabulary(path_vocabulary)
+part_name = []
+for part in voc.getPartitions():
+    for partelt in part.getModalities():
+        part_name.append(part.attname + "." + partelt.getName())
 print('Loading data ...')
 rw = rwCSV(voc, path_data)
 
@@ -105,6 +109,13 @@ def show_sunburst():
     print('test 1')
     py.plot(go.Figure([trace], layout))
     print('test 1')
+
+
+def coeff_corell (v):
+    dico_coeff = {}
+    for p in part_name:
+        dico_coeff[p] = rw.correlation([v], [p])
+    return dico_coeff
 
 
 if __name__ == '__main__':
