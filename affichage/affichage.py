@@ -42,7 +42,7 @@ def show_pie ():
     plt.show()
 
 
-def plot_pie (partition):
+def save_pie(partition, path):
     '''
     Create a visualisation of the partition
     :return:
@@ -57,7 +57,8 @@ def plot_pie (partition):
     plt.pie(values, labels=labels,
             autopct='%1.1f%%', startangle=200)
     plt.title("Description of the " + partition, fontsize=15)
-    plt.show()
+    # plt.show(hold=False)
+    plt.savefig(path)
 
 
 def show_sunburst():
@@ -111,7 +112,7 @@ def show_sunburst():
     print('test 1')
 
 
-def coeff_corell (v):
+def coeff_corell (v):  # TODO : Il faut en pas calculer la corrélation ave lui même !
     dico_coeff = {}
     for p in part_name:
         dico_coeff[p] = rw.correlation([v], [p])

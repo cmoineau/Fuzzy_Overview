@@ -57,8 +57,11 @@ class RewriterFromCSV(object):
             cover2 += R[key]
             cover1 += Rv1[key]
         # Calcul de dep(v1,v2)
-        dep = cover1 / cover2
-        print(dep, cover1, cover2)
+        if cover2 != 0:
+            dep = cover1 / cover2
+        else:
+            return "error"
+        # print(dep, cover1, cover2)
         if dep <= 1:
             return 0
         else:

@@ -1,6 +1,13 @@
 from tkinter import *
-from affichage.affichage import plot_pie, vocab
+from affichage.affichage import save_pie, vocab
+height = 600
+width = 800
 
+
+def prompt_fig(partition, canvas):
+    save_pie(partition, '../Data/tmp.png')
+    canvas.delete('all')
+    canvas.create_image(0, 0, image=PhotoImage(file='../Data/tmp.png'))
 
 
 def create_select_menu():
@@ -13,10 +20,14 @@ def create_select_menu():
         liste.insert(i+1, vocab[i])
     liste.pack()
 
-    close_button=Button(fenetre, text="selectionner", command=lambda: plot_pie(liste.get(ANCHOR)))
+    canv = Canvas(fenetre, bg="white", height=height, width=width)
+    canv.pack()
+
+    close_button=Button(fenetre, text="selectionner", command=lambda: prompt_fig(liste.get(ANCHOR), canv))
     close_button.pack()
 
     fenetre.mainloop()
+
 
 if __name__ == '__main__':
     create_select_menu()
