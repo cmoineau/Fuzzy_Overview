@@ -91,41 +91,47 @@ class RewriterFromCSV(object):
         for part in self.vocabulary.getPartitions():
             for partelt in part.getModalities():
                 ans[part.attname + "." + partelt.getName()] = 0
-        s = self.selection(list_id,seuil=seuil)
+        s = self.selection(list_id, seuil=seuil)
         for flight in s:
             f = flight.rewrite()
             for key, x in f.items():
                 ans[key]= ans[key] + x/len(s)
         return ans
 
-    def correlation(self, v1, v2):
-        """
-        Cette fonction va calculer la correlation entre deux conditions v1 et v2
-        :param v1:
-        :param v2:
-        :return:
-        """
-        Rv1={}
-        for i in v1:
-            Rv1[i] = 0
-        # Calcul de cover(v1, Rv2) & cover(v1, R)
+
+    def distance(self, v1, v2):
+        '''
+        calcul la distance séparant deux termes au sein d'une même partition. Renvoie 0
+        si les termes sont identiques. Renvoie -1 s'ils n'appartiennent pas à la même partition
+        :param v1: terme v1
+        :param v2: terme v2
+        :return: d la distance (entier) en valeur absolue entre v1 et v2
+        '''
+        if v1.split(".")[0] == v2.split(".")[0]:
+            modnames = self.vocabulary.getPartition(v1.split(".")[0]).modnames
+            i1 = modnames.index(v1.split(".")[1])
+            i2 = modnames.index(v2.split(".")[1])
+            d = abs(i2 - i1)
+        else :
+            d= -1
+        return d
+
+    def atypique(self, v1):
+        maxi = 0
+        partition = v1.split(".")[0]
         Rv1 = rw.reecriture(v1)
+        c1 = Rv1[v1] / len(self.vocabulary.getPartitions())
 
-        cover1 = 0
-        cover2 = 0
-        for key, elts in Rv1.items():
-            cover2 += self.R[key]
-            if key in v2:
-                cover1 += elts
-        cover1 = cover1 / len(Rv1)
-        cover2 = cover2 / len(self.R)
-        # Calcul de dep(v1,v2)
-        dep = cover1 / cover2
-        if dep <= 1:
-            return 0
-        else:
-            return 1 - (1/dep)
+        for mod in self.vocabulary.getPartition(partition).modnames:
+            if mod != v1.split(".")[1]:
+                v2 = partition + "." + mod
+                d = self.distance(v1, v2)
+                Rv2 = rw.reecriture(v2)
+                c2 = Rv2[v2]/len(self.vocabulary.getPartitions())
+                maxi = max(min(d, c1, 1-c2), maxi)
 
+
+        return maxi
 
 if __name__ == "__main__":
     path_vocabulary = "./Data/FlightsVoc2.txt"
@@ -139,7 +145,8 @@ if __name__ == "__main__":
             # for flight in selection:
             #     print(flight.fields['TailNum'])
             # print(rw.reecriture(['DayOfWeek.end']))
-            print(rw.correlation(['DepDelay.veryLong'], ['ArrDelay.veryLong']))
+            # print(rw.correlation(['DepDelay.veryLong'], ['ArrDelay.veryLong']))
+            print(rw.atypique('Distance.veryShort'))
 
         else:
             print("Data file %s not found" % path_data)
