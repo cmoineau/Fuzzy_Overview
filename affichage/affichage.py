@@ -7,10 +7,14 @@ import plotly.graph_objs as go
 vocab = ["DayOfWeek", "DepTime", "ArrTime", "AirTime", "ArrDelay", "DepDelay", "Distance",\
              "Month", "DayOfMonth", "TaxiIn", "TaxiOut", "CarrierDelay", "WeatherDelay", "SecurityDelay",\
              "LateAirCraftDelay"]
-path_vocabulary = "./Data/FlightsVoc2.txt"
-path_data = "./Data/2008short.csv"
+path_vocabulary = "../Data/FlightsVoc2.txt"
+path_data = "../Data/2008short.csv"
 print('Loading vocabulary ...')
 voc = Vocabulary(path_vocabulary)
+part_name = []
+for part in voc.getPartitions():
+    for partelt in part.getModalities():
+        part_name.append(part.attname + "." + partelt.getName())
 print('Loading data ...')
 rw = rwCSV(voc, path_data)
 
@@ -35,6 +39,24 @@ def show_pie ():
     plt.pie(values, labels=labels,
             autopct='%1.1f%%', startangle=200)
     plt.title("Description of the " + voc_to_filter, fontsize=15)
+    plt.show()
+
+
+def plot_pie (partition):
+    '''
+    Create a visualisation of the partition
+    :return:
+    '''
+    labels = []
+    values = []
+    for label, x in rw.readAndRewrite().items():
+        if label.split(".")[0] == partition:
+            labels.append(label.split(".")[1])
+            values.append(x)
+    plt.figure(figsize=(10, 10))
+    plt.pie(values, labels=labels,
+            autopct='%1.1f%%', startangle=200)
+    plt.title("Description of the " + partition, fontsize=15)
     plt.show()
 
 
@@ -87,6 +109,13 @@ def show_sunburst():
     print('test 1')
     py.plot(go.Figure([trace], layout))
     print('test 1')
+
+
+def coeff_corell (v):
+    dico_coeff = {}
+    for p in part_name:
+        dico_coeff[p] = rw.correlation([v], [p])
+    return dico_coeff
 
 
 if __name__ == '__main__':

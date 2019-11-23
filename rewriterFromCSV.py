@@ -48,9 +48,9 @@ class RewriterFromCSV(object):
         :param v2:
         :return:
         """
-        Rv1 = rw.reecriture(v1)
+        Rv1 = self.reecriture(v1)
         R = self.readAndRewrite()
-        size_r1 = len(rw.selection(v1))
+        size_r1 = len(self.selection(v1))
         cover1 = 0
         cover2 = 0
         for key in v2:
