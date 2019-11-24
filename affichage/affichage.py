@@ -1,9 +1,7 @@
 import matplotlib.pyplot as plt
 from rewriterFromCSV import RewriterFromCSV as rwCSV
 from vocabulary import *
-import plotly.offline as py
-import plotly.graph_objs as go
-
+import numpy as np
 vocab = ["DayOfWeek", "DepTime", "ArrTime", "AirTime", "ArrDelay", "DepDelay", "Distance",\
              "Month", "DayOfMonth", "TaxiIn", "TaxiOut", "CarrierDelay", "WeatherDelay", "SecurityDelay",\
              "LateAirCraftDelay"]
@@ -60,55 +58,44 @@ def plot_pie(partition):
     plt.show()
 
 
-def show_sunburst():
+def plot_heat_map(partition1, partition2):
     '''
-    Not really functionnal need the full database
+    Create a visualisation of the correlation between two partitions
     :return:
     '''
-    labels = []
-    values = []
-    parents = []
-    voc_to_filter = "DepDelay.short"
-    # while voc_to_filter not in vocab:
-    #     print("Please use one of these key word :")
-    #     print(vocab)
-    #     voc_to_filter = input("Keyword you want to see :")
-    labels.append(voc_to_filter)
-    parents.append("")
-    values.append(0)
+    column_labels = []
+    row_labels = []
+    for p in part_name:
+        if p.split('.')[0] == partition1:
+            row_labels.append(p.split('.')[1])
+        if p.split('.')[0] == partition2:
+            column_labels.append(p.split('.')[1])
+    data = []
+    for mod1 in row_labels:
+        t=[]
+        for mod2 in column_labels:
+            correl = rw.correlation([partition1 + '.' + mod1], [partition2 + '.' + mod2])
+            if correl == 'error':  # TODO : trouver une façon plus élégante de gérer les erreurs
+                correl = 0
+            t.append(correl)
+        data.append(t)
+    data = np.array(data)
+    fig, axis = plt.subplots()  # il me semble que c'est une bonne habitude de faire supbplots
+    heatmap = axis.pcolor(data, cmap=plt.cm.Greens)  # heatmap contient les valeurs
 
-    month = ["Month.autumn", "Month.winter", "Month.spring", "Month.summer"]
-    dmonth = ["DayOfMonth.beginning", "DayOfMonth.middle", "DayOfMonth.end"]
-    dweek = ["DayOfWeek.beginning", "DayOfWeek.end", "DayOfWeek.weekend"]
-    for m in month:
-        print(m + '\n====================')
-        labels.append(m)
-        parents.append(voc_to_filter)
-        values.append(rw.reecriture([m])[m])
-        for dm in dmonth:
-            print(dm + '\n====================')
-            labels.append(dm)
-            parents.append(m)
-            values.append(rw.reecriture([m, dm])[m])
-            for d in dweek:
-                print(d)
-                labels.append(d)
-                parents.append(dm)
-                values.append(rw.reecriture([m, dm, d])[d])
-    print(values)
-    trace = go.Sunburst(
-        labels=labels,
-        parents=parents,
-        values=values,
-        outsidetextfont={"size": 20, "color": "#377eb8"},
-        marker={"line": {"width": 2}},
-    )
-    layout = go.Layout(
-        margin=go.layout.Margin(t=0, l=0, r=0, b=0)
-    )
-    print('test 1')
-    py.plot(go.Figure([trace], layout))
-    print('test 1')
+    axis.set_yticks(np.arange(data.shape[0]) + 0.5, minor=False)
+    axis.set_xticks(np.arange(data.shape[1]) + 0.5, minor=False)
+
+    axis.invert_yaxis()
+
+    axis.set_yticklabels(row_labels, minor=False)
+    axis.set_xticklabels(column_labels, minor=False)
+
+    axis.set_ylabel(partition1)
+    axis.set_xlabel(partition2)
+    axis.set_title('Corrélation entre ' + partition1 + ' et ' + partition2)
+    fig.set_size_inches(11.03, 3.5)
+    plt.show()
 
 
 def coeff_corell (v):  # TODO : Il faut en pas calculer la corrélation ave lui même !
@@ -117,9 +104,3 @@ def coeff_corell (v):  # TODO : Il faut en pas calculer la corrélation ave lui 
         dico_coeff[p] = rw.correlation([v], [p])
     return dico_coeff
 
-
-if __name__ == '__main__':
-    print("begin")
-    # show_sunburst()
-    plot_pie()
-    print("end")

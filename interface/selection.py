@@ -2,7 +2,6 @@ from tkinter import *
 from affichage.affichage import plot_pie, vocab
 
 
-
 def create_select_menu():
     fenetre = Tk()
     fenetre.title("Selection de terme")
@@ -20,9 +19,6 @@ def create_select_menu():
 
     select_button = Button(select, text="Lancer la selection", command=lambda:plot_pie(liste.get(ANCHOR)))
     select_button.pack()
-
-
-
 
     fenetre.mainloop()
 
