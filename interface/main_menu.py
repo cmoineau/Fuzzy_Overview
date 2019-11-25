@@ -2,12 +2,9 @@ from tkinter import *
 from tkinter.messagebox import *
 from interface.selection import create_select_menu
 from interface.correlation import create_correlation_menu
-<<<<<<< Updated upstream
 from interface.correlation2 import create_correlation2_menu
 
-=======
 from interface.atypique import create_atypique_menu
->>>>>>> Stashed changes
 
 def not_ready_yet():
     showerror("Erreur : Page pas prêtes", "La page est actuellement en construction !")
