@@ -111,7 +111,7 @@ class RewriterFromCSV(object):
             modnames = self.vocabulary.getPartition(v1.split(".")[0]).modnames
             i1 = modnames.index(v1.split(".")[1])
             i2 = modnames.index(v2.split(".")[1])
-            d = abs(i2 - i1)
+            d = abs(i2 - i1)/(len(modnames) - 1)
         else :
             d= -1
         return d
@@ -119,16 +119,18 @@ class RewriterFromCSV(object):
     def atypique(self, v1):
         maxi = 0
         partition = v1.split(".")[0]
-        Rv1 = rw.reecriture(v1)
-        c1 = Rv1[v1] / len(self.vocabulary.getPartitions())
+        Rv1 = self.reecriture(v1)
+        c1 = Rv1[v1]
 
         for mod in self.vocabulary.getPartition(partition).modnames:
             if mod != v1.split(".")[1]:
                 v2 = partition + "." + mod
                 d = self.distance(v1, v2)
-                Rv2 = rw.reecriture(v2)
-                c2 = Rv2[v2]/len(self.vocabulary.getPartitions())
+                Rv2 = self.reecriture(v2)
+                c2 = Rv2[v2]
                 maxi = max(min(d, c1, 1-c2), maxi)
+                print(d, c1,  Rv1[v1], len(self.vocabulary.getPartitions()), 1-c2, maxi)
+
         return maxi
 
 
@@ -145,7 +147,7 @@ if __name__ == "__main__":
             #     print(flight.fields['TailNum'])
             # print(rw.reecriture(['DayOfWeek.end']))
             # print(rw.correlation(['DepDelay.veryLong'], ['ArrDelay.veryLong']))
-            print(rw.atypique('Distance.veryShort'))
+            print(rw.atypique('Origin.big'))
 
         else:
             print("Data file %s not found" % path_data)

@@ -1,48 +1,56 @@
 from tkinter import *
-from affichage.affichage import partition, coeff_corell
+from affichage.affichage import partition, coeff_corell, coeff_atyp
 from random import randint
 from math import sqrt
+
 height = 600
 width = 800
+R = 100  # taille max d'un cercle
 
 
-#TODO/ CHANGER LA FONCTION DE SUPERPOSITION
-def superpose(x, y, tab_de_coord):
-    x_size = 100
-    y_size = 15
+
+def superpose(x, y, r, tab_de_coord):
     rep = False
     for coord in tab_de_coord:
-        print(coord, ' | ', x, y)
-        if coord[0]-x_size < x < coord[0]+x_size and coord[1]-y_size < y < coord[1]+y_size :
+        x0, y0 = coord[0], coord[1]
+        r0 = coord[2]
+        D = sqrt((x - x0) ** 2 + (y - y0) ** 2)
+        print(coord, ' | ', x, y, r)
+        if D <= R * r0:
             rep = True
     return rep
 
-#TODO/ CHANGER LA FONCTION DE COMPUTE
 
 def compute_atypique(param, canv):
     canv.delete('all')
-    padd = 200
-    ox = width/2  # Définition du centre de la figure
-    oy = height/2
-    canv.create_text(ox, oy, text=param, font="Arial 12", fill="red")
-    dico_coef = coeff_corell(param)
+    dico_coef = coeff_atyp(param)
     print(dico_coef)
     tab_de_coord = []
+    color_list = ['red', 'blue', 'green', 'yellow', 'orange', 'indigo', 'purple', 'grey', 'cyan', 'maroon', 'gold',
+                  'pink']
+    color_used = [False] * len(color_list)
     for key, elts in dico_coef.items():
         if elts != 'error':
             # We select a random x between -width and width
             if elts != 0:  # We do not select not correlated elements
                 overlap = True
                 while overlap:
-                    rayon = ((1-elts) * oy)  # Here we compute the size of the circle
-                    x = randint(int(ox - rayon), int(ox + rayon))
-                    y = sqrt(abs(rayon**2 - (x - ox)**2)) + oy
-                    print('key : ', key, 'y : ', y, 'x : ', x)
-                    if not superpose(x,y, tab_de_coord):
-                        canv.create_text(x, y, text=key, font="Arial 9 italic", fill="blue")
-                        overlap = False
-                        tab_de_coord.append((x, y))
+                    r = elts  # Here we compute the size of the circle
+                    x = randint(int(r * R) + 50, int(width - r * R) - 50)
+                    y = randint(int(r * R) + 50, int(height - r * R) - 50)
 
+                    print('key : ', key, 'y : ', y, 'x : ', x)
+                    if not superpose(x, y, r, tab_de_coord):
+                        k = randint(0, len(color_list)-1)
+                        while not (color_used[k]):
+                            k = randint(0, len(color_list) - 1)
+                        color = color_list[k]
+                        color_used[k]=True
+                        canv.create_oval(x - r * R, y - r * R, x + r * R, y + r * R, bg= color)
+                        canv.create_text(x, y, text=key + "\n\t" + str(int(elts * 100)) + "%", font="Arial 9 italic",fill="black")
+
+                        overlap = False
+                        tab_de_coord.append((x, y, r))
 
 
 def create_atypique_menu():

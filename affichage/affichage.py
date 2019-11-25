@@ -106,3 +106,9 @@ def coeff_corell (v):
             dico_coeff[p] = rw.correlation([v], [p])
     return dico_coeff
 
+def coeff_atyp (v):
+    dico_coeff = {}
+    for m in modalite:
+        if m.split('.')[0] == v:
+            dico_coeff[m] = rw.atypique(m)
+    return dico_coeff
