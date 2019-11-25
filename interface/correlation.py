@@ -74,10 +74,3 @@ def create_correlation_menu():
     go_button.pack()
 
     fenetre.mainloop()
-<<<<<<< Updated upstream
-
-
-if __name__ == '__main__':
-    create_correlation_menu()
-=======
->>>>>>> Stashed changes

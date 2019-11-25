@@ -1,11 +1,8 @@
 import matplotlib.pyplot as plt
 from rewriterFromCSV import RewriterFromCSV as rwCSV
 from vocabulary import *
-<<<<<<< Updated upstream
 import numpy as np
-=======
 
->>>>>>> Stashed changes
 vocab = ["DayOfWeek", "DepTime", "ArrTime", "AirTime", "ArrDelay", "DepDelay", "Distance",\
              "Month", "DayOfMonth", "TaxiIn", "TaxiOut", "CarrierDelay", "WeatherDelay", "SecurityDelay",\
              "LateAirCraftDelay"]
@@ -61,8 +58,6 @@ def plot_pie(partition):
     plt.title("Description of the " + partition, fontsize=15)
     plt.show()
 
-
-<<<<<<< Updated upstream
 def plot_heat_map(partition1, partition2):
     '''
     Create a visualisation of the correlation between two partitions
@@ -101,9 +96,6 @@ def plot_heat_map(partition1, partition2):
     axis.set_title('Corrélation entre ' + partition1 + ' et ' + partition2)
     fig.set_size_inches(11.03, 3.5)
     plt.show()
-
-=======
->>>>>>> Stashed changes
 
 def coeff_corell (v):  # TODO : Il faut en pas calculer la corrélation ave lui même !
     dico_coeff = {}
