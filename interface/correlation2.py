@@ -1,10 +1,12 @@
 from tkinter import *
-from affichage.affichage import vocab, plot_heat_map
+from affichage.affichage import partition, plot_heat_map
 
 
 def create_correlation2_menu():
     fenetre = Tk()
     fenetre.title("Visualisation de la corrélation")
+
+    # Creation of the selection menu -----------------------------------------------------------------------------------
     select = Frame(fenetre)
     select.pack(side=LEFT, padx=30, pady=30)
     label_select1 = LabelFrame(select, padx=20, pady=20, text="Partition à étudier :")
@@ -14,16 +16,16 @@ def create_correlation2_menu():
     label_terme1.pack()
     # Creation of a list -----------------------------------------------------------------------------------------------
     liste1 = Listbox(label_select1)
-    for i in range(len(vocab)):
-        liste1.insert(i+1, vocab[i])
+    for i in range(len(partition)):
+        liste1.insert(i + 1, partition[i])
     liste1.pack()
 
     label_terme2=Label(label_select1, text="2ème partition :")
     label_terme2.pack()
     # Creation of a list -----------------------------------------------------------------------------------------------
     liste2 = Listbox(label_select1)
-    for i in range(len(vocab)):
-        liste2.insert(i + 1, vocab[i])
+    for i in range(len(partition)):
+        liste2.insert(i + 1, partition[i])
     liste2.pack()
 
     go_button = Button(select, text="Lancer la recherche de corrélation !", command=lambda: plot_heat_map((\

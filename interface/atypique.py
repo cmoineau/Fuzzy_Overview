@@ -1,5 +1,5 @@
 from tkinter import *
-from affichage.affichage import vocab, coeff_corell
+from affichage.affichage import partition, coeff_corell
 from random import randint
 from math import sqrt
 height = 600
@@ -54,8 +54,8 @@ def create_atypique_menu():
     label_select1.pack(fill="both", expand="yes")
     # Creation of a list -----------------------------------------------------------------------------------------------
     liste1 = Listbox(label_select1)
-    for i in range(len(vocab)):
-        liste1.insert(i+1, vocab[i])
+    for i in range(len(partition)):
+        liste1.insert(i + 1, partition[i])
     liste1.pack()
 
     affiche = Frame(fenetre)
