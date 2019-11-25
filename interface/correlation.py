@@ -15,12 +15,13 @@ def signe_alea():
 
 
 def superpose(x, y, tab_de_coord):
-    x_size = 500
-    y_size = 100
+    x_size = 100
+    y_size = 15
     rep = False
     for coord in tab_de_coord:
         print(coord, ' | ', x, y)
-        rep = coord[0]-x_size < x < coord[0]+x_size and coord[1]-y_size < y < coord[1]+y_size
+        if coord[0]-x_size < x < coord[0]+x_size and coord[1]-y_size < y < coord[1]+y_size :
+            rep = True
     return rep
 
 
@@ -37,15 +38,15 @@ def compute_correlation(param, canv):
         if elts != 'error':
             # We select a random x between -width and width
             if elts != 0:  # We do not select not correlated elements
-                flag = True
-                while flag:
+                overlap = True
+                while overlap:
                     rayon = ((1-elts) * oy)  # Here we compute the size of the circle
                     x = randint(int(ox - rayon), int(ox + rayon))
                     y = signe_alea() * sqrt(abs(rayon**2 - (x - ox)**2)) + oy
                     print('key : ', key, 'y : ', y, 'x : ', x)
-                    canv.create_text(x, y, text=key, font="Arial 9 italic", fill="blue")
                     if not superpose(x,y, tab_de_coord):
-                        flag = False
+                        canv.create_text(x, y, text=key, font="Arial 9 italic", fill="blue")
+                        overlap = False
                         tab_de_coord.append((x, y))
 
 
@@ -73,7 +74,10 @@ def create_correlation_menu():
     go_button.pack()
 
     fenetre.mainloop()
+<<<<<<< Updated upstream
 
 
 if __name__ == '__main__':
     create_correlation_menu()
+=======
+>>>>>>> Stashed changes
