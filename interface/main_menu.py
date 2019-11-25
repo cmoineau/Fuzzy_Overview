@@ -5,7 +5,12 @@ from interface.correlation import create_correlation_menu
 from interface.correlation2 import create_correlation2_menu
 from interface.atypique import create_atypique_menu
 
+
 def not_ready_yet():
+    """
+    A small alert to inform the user that something is not ready yet.
+    :return:
+    """
     showerror("Erreur : Page pas prêtes", "La page est actuellement en construction !")
 
 

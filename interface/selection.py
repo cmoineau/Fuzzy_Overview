@@ -1,10 +1,10 @@
 from tkinter import *
-from affichage.affichage import plot_pie, vocab
+from affichage.affichage import plot_pie, partition
 
 
 def create_select_menu():
     fenetre = Tk()
-    fenetre.title("Selection de terme")
+    fenetre.title("Selection d'une partition")
 
     select = Frame(fenetre)
     select.pack(side=LEFT, padx=30, pady=30)
@@ -13,11 +13,11 @@ def create_select_menu():
 
     # Creation of a list -----------------------------------------------------------------------------------------------
     liste = Listbox(label_select)
-    for i in range(len(vocab)):
-        liste.insert(i+1, vocab[i])
+    for i in range(len(partition)):
+        liste.insert(i + 1, partition[i])
     liste.pack()
 
-    select_button = Button(select, text="Lancer la selection", command=lambda:plot_pie(liste.get(ANCHOR)))
+    select_button = Button(select, text="Lancer la visualisation", command=lambda: plot_pie(liste.get(ANCHOR)))
     select_button.pack()
 
     fenetre.mainloop()

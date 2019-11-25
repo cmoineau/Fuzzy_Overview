@@ -1,9 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import csv
-import sys
 from vocabulary import *
 from flight import Flight
+
 
 class RewriterFromCSV(object):
 
@@ -39,7 +38,6 @@ class RewriterFromCSV(object):
         except:
             raise Exception("Error while loading the dataFile %s" % (self.dataFile))
         return R
-
 
     def correlation(self, v1, v2):
         """
@@ -101,15 +99,14 @@ class RewriterFromCSV(object):
                 ans[key]= ans[key] + x/len(s)
         return ans
 
-
     def distance(self, v1, v2):
-        '''
+        """
         calcul la distance séparant deux termes au sein d'une même partition. Renvoie 0
         si les termes sont identiques. Renvoie -1 s'ils n'appartiennent pas à la même partition
         :param v1: terme v1
         :param v2: terme v2
         :return: d la distance (entier) en valeur absolue entre v1 et v2
-        '''
+        """
         if v1.split(".")[0] == v2.split(".")[0]:
             modnames = self.vocabulary.getPartition(v1.split(".")[0]).modnames
             i1 = modnames.index(v1.split(".")[1])
@@ -132,9 +129,8 @@ class RewriterFromCSV(object):
                 Rv2 = rw.reecriture(v2)
                 c2 = Rv2[v2]/len(self.vocabulary.getPartitions())
                 maxi = max(min(d, c1, 1-c2), maxi)
-
-
         return maxi
+
 
 if __name__ == "__main__":
     path_vocabulary = "./Data/FlightsVoc2.txt"
