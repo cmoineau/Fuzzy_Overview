@@ -51,7 +51,7 @@ def compute_correlation(param, canv):
 
 def create_correlation_menu():
     fenetre = Tk()
-    fenetre.title("Visualisation de la corélation")
+    fenetre.title("Visualisation de la corrélation")
     select = Frame(fenetre)
     select.pack(side=LEFT, padx=30, pady=30)
     label_select1 = LabelFrame(select, padx=20, pady=20, text="Terme à étudier :")
@@ -68,13 +68,12 @@ def create_correlation_menu():
     canv = Canvas(fenetre, bg="white", height=height, width=width)
     canv.pack()
 
-    go_button = Button(select, text="selectionner", command=lambda: compute_correlation((liste1.get(ANCHOR)), canv))
+    go_button = Button(select, text="Lancer la recherche de corrélation !", command=lambda: compute_correlation((\
+        liste1.get(ANCHOR)), canv))
     go_button.pack()
 
     fenetre.mainloop()
 
 
 if __name__ == '__main__':
-    # create_correlation_menu()
-    while(True):
-        print(randint(-1,1))
+    create_correlation_menu()
