@@ -15,8 +15,8 @@ def superpose(x, y, r, tab_de_coord):
         x0, y0 = coord[0], coord[1]
         r0 = coord[2]
         D = sqrt((x - x0) ** 2 + (y - y0) ** 2)
-        print(coord, ' | ', x, y, r)
-        if D <= R * r0:
+        # print(coord, ' | ', x, y, r)
+        if D <= (r + r0) * R:
             rep = True
     return rep
 
@@ -26,8 +26,7 @@ def compute_atypique(param, canv):
     dico_coef = coeff_atyp(param)
     print(dico_coef)
     tab_de_coord = []
-    color_list = ['red', 'blue', 'green', 'yellow', 'orange', 'indigo', 'purple', 'grey', 'cyan', 'maroon', 'gold',
-                  'pink']
+    color_list = ['red', 'blue', 'green', 'orange', 'indigo', 'grey', 'cyan', 'maroon', 'gold', 'pink']
     color_used = [False] * len(color_list)
     for key, elts in dico_coef.items():
         if elts != 'error':
@@ -42,12 +41,13 @@ def compute_atypique(param, canv):
                     print('key : ', key, 'y : ', y, 'x : ', x)
                     if not superpose(x, y, r, tab_de_coord):
                         k = randint(0, len(color_list)-1)
-                        while not (color_used[k]):
+                        while color_used[k]:
                             k = randint(0, len(color_list) - 1)
                         color = color_list[k]
-                        color_used[k]=True
-                        canv.create_oval(x - r * R, y - r * R, x + r * R, y + r * R, bg= color)
-                        canv.create_text(x, y, text=key + "\n\t" + str(int(elts * 100)) + "%", font="Arial 9 italic",fill="black")
+                        color_used[k] = True
+                        canv.create_oval(x - r * R, y - r * R, x + r * R, y + r * R, fill= color, outline="white")
+                        canv.create_text(x, y, text=key + " : " + str(int(elts * 100)) + "%",
+                                         font="Arial 9 italic", fill="black")
 
                         overlap = False
                         tab_de_coord.append((x, y, r))
