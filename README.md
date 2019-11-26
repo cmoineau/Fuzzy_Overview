@@ -1,11 +1,12 @@
 # ProjetBDDA
 
-
-
-Utilisez le fichier rewriterFromCSV.py pour tester la réécriture des données
-python rewrtierFromCSV.py
-
 /!\ Il faut placer les données dans un fichier "Data" à la racine !
+
+Pour lancer l'interface, lancez la commande à la racine du projet :
+
+```Bash
+python3 ./interface/main_menu.py
+```
 
 ## Dépendances:
 - Tkinter
