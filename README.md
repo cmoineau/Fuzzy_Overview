@@ -1,6 +1,6 @@
 # ProjetBDDA
 
-/!\ Il faut placer les données dans un fichier "Data" à la racine !
+⚠️ Il faut placer les données dans un fichier "Data" à la racine ! ⚠️
 
 Pour lancer l'interface, lancez la commande à la racine du projet :
 
